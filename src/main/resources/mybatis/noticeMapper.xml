@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.service.impl.BoardDAO">
+	
+	<resultMap type="board" id="boardResult"></resultMap>
+	
+	<select id="totalCnt" parameterType="com.board.utill.Pager" resultType="int">
+		SELECT COUNT(*) AS cnt 
+		FROM NOTICE 
+	</select>
+	
+	<select id="listLimit" parameterType="com.board.utill.Pager" resultMap="boardResult">
+			SELECT *
+			FROM NOTICE
+			ORDER BY DDAY DESC, NO DESC
+			LIMIT #{start}, #{pageSize};
+	</select>
+	
+	<select id="listCursor" parameterType="com.board.utill.Pager" resultMap="boardResult">
+	 <![CDATA[			
+			SELECT *
+			FROM NOTICE
+			WHERE 
+			NO > (#{totalCnt} - (#{start}+#{pageSize}))
+			AND 
+			NO <= (#{totalCnt} -(#{start}+#{pageSize})+#{pageSize})
+			ORDER BY DDAY DESC, NO DESC
+			limit #{pageSize}
+ 	]]>
+<!--  			
+			SELECT *
+			FROM NOTICE
+			WHERE 
+			NO > #{start}
+			OR 
+			(NO > #{start} AND DDAY = (SELECT DDAY FROM NOTICE
+			WHERE 
+			NO = #{start}))
+			ORDER BY DDAY DESC, NO DESC
+			LIMIT #{pageSize};
+-->
+	</select>      
+</mapper>
