@@ -9,6 +9,7 @@ import com.board.utill.Pager;
 
 @Repository("boardDAO")
 public interface BoardDAO {
+	//커서
 	public List<BoardVO> listCursor(Pager pager) throws Exception;
 
 	public List<BoardVO> listLimit(Pager pager) throws Exception;
